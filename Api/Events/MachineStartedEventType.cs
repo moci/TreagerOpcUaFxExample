@@ -7,7 +7,7 @@ public sealed class MachineStartedEventType(IOpcReadOnlyNodeDataStore dataStore)
 {
     public sealed class Node : OpcEventNode
     {
-        public const string NodeId = $"ns=1;s={nameof(MachineStartedEventType)}";
+        public const string NodeId = $"ns=2;s={nameof(MachineStartedEventType)}";
 
         public Node(string name) : base(name) { }
         public Node(IOpcNode parent, string name) : base(parent, name) { }

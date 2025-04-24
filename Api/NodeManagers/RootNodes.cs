@@ -60,6 +60,7 @@ public class RootNodes : OpcNodeManager
         {
             productionTeamChanged.Members.Value = [.. e];
 
+            productionTeamChanged.Time = DateTime.UtcNow;
             productionTeamChanged.ReportEventFrom(SystemContext, eventsNode);
         };
         Machine.AlarmObserved += (o, e) =>
@@ -68,10 +69,12 @@ public class RootNodes : OpcNodeManager
             machineAlarm.AlarmSeverity.Value = e.Severity;
             machineAlarm.AlarmObservedAt.Value = e.ObservedAt;
 
+            machineAlarm.Time = DateTime.UtcNow;
             machineAlarm.ReportEventFrom(SystemContext, eventsNode);
         };
         Machine.MachineStarted += (o, e) =>
         {
+            machineStarted.Time = DateTime.UtcNow;
             machineStarted.ReportEventFrom(SystemContext, eventsNode);
         };
     }

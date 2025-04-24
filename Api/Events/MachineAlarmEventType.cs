@@ -11,7 +11,7 @@ public class MachineAlarmEventType(IOpcReadOnlyNodeDataStore dataStore) : OpcEve
 
     public sealed class Node : OpcEventNode
     {
-        public const string NodeId = $"ns=1;s={nameof(MachineAlarmEventType)}";
+        public const string NodeId = $"ns=2;s={nameof(MachineAlarmEventType)}";
 
         public Node(string name) : base(name)
         {

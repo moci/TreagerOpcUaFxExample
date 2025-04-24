@@ -2,8 +2,8 @@
 
 namespace OpcUaApi.Api.Types;
 
-[OpcDataType($"ns=1;s={nameof(MachineAlarmType)}")]
-[OpcDataTypeEncoding($"ns=1;s={nameof(MachineAlarmType)}.Binary", Type = OpcEncodingType.Binary)]
+[OpcDataType($"ns=2;s={nameof(MachineAlarmType)}")]
+[OpcDataTypeEncoding($"ns=2;s={nameof(MachineAlarmType)}.Binary", Type = OpcEncodingType.Binary)]
 public sealed class MachineAlarmType
 {
     public string Id { get; init; } = string.Empty;

@@ -15,9 +15,9 @@ public sealed class Machine(MachineNodes nodes)
     {
         MachineAlarmType typedAlarm = new()
         {
-            Id = alarm.Id,Severity = 
-            alarm.Severity, 
-            ObservedAt = DateTime.UtcNow,
+            Id = alarm.Id,
+            Severity = alarm.Severity, 
+            ObservedAt = alarm.ObservedAt,
         };
         nodes.ObserveAlarm(typedAlarm);
     }
@@ -26,5 +26,6 @@ public sealed class Machine(MachineNodes nodes)
     {
         public required string Id { get; init; }
         public required int Severity { get; init; }
+        public DateTime ObservedAt { get; init; } = DateTime.UtcNow;
     }
 }

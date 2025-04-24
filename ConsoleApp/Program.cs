@@ -25,7 +25,7 @@ internal class Program
 
         var filter = OpcFilter
             .Using(client)
-            .FromEvents("ns=1;s=MachineStartedEventType")
+            .FromEvents("ns=2;s=MachineStartedEventType")
             .Select();
         client.SubscribeEvent("ns=2;s=Events", filter, OnEventRecievedHandler);
 
@@ -34,12 +34,28 @@ internal class Program
         client.SubscribeDataChange("ns=2;s=Machine/IsRunning", OnDataChanged);
 
         var doLoop = true;
-        void prependOperator() => server.Production.Team = server.Production.Team.Prepend(new() { Id = Guid.NewGuid().ToString(), Cost = Random.Shared.Next(0, 200) / 10.0 });
+        void prependOperator()
+        {
+            Production.Operator @operator = new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Cost = Random.Shared.Next(0, 200) / 10.0,
+            };
+            server.Production.Team = server.Production.Team.Prepend(@operator);
+        }
         void deleteFirstOperator() => server.Production.Team = server.Production.Team.Skip(1);
         void quit() => doLoop = false;
         void start() => server.Machine.IsRunning = true;
         void stop() => server.Machine.IsRunning = false;
-        void addAlarm() => server.Machine.ObserveAlarm(new() { Id = Guid.NewGuid().ToString(), Severity = Random.Shared.Next(0, 5) });
+        void addAlarm()
+        {
+            Machine.Alarm alarm = new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Severity = Random.Shared.Next(0, 5),
+            };
+            server.Machine.ObserveAlarm(alarm);
+        }
 
         Dictionary<string, CliCommand> cli = new()
         {
@@ -116,9 +132,9 @@ internal class Program
         Console.WriteLine($"\tEvent source name: {e.Event.SourceName}");
         Console.WriteLine($"\tEvent source node id: {e.Event.SourceNodeId}");
 
-        if (e.Event is MachineAlarmEventType) Console.WriteLine("Machine alarm event received");
-        else if (e.Event is MachineStartedEventType) Console.WriteLine("Machine started event received");
-        else if (e.Event is ProductionTeamChangedEventType) Console.WriteLine("Production team changed event received");
-        else Console.WriteLine("Unexpected event received");
+        if (e.Event is MachineAlarmEventType alarmEvent) Console.WriteLine("\tMachine alarm event received");
+        else if (e.Event is MachineStartedEventType) Console.WriteLine("\tMachine started event received");
+        else if (e.Event is ProductionTeamChangedEventType) Console.WriteLine("\tProduction team changed event received");
+        else Console.WriteLine("\tUnexpected event received");
     }
 }

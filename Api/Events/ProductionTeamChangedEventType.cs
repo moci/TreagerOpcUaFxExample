@@ -7,20 +7,25 @@ namespace OpcUaApi.Api.Events;
 [OpcEventType(Node.NodeId)]
 public sealed class ProductionTeamChangedEventType(IOpcReadOnlyNodeDataStore dataStore) : OpcEvent(dataStore)
 {
-    public IEnumerable<OperatorType> Members => DataStore.Get<OperatorType[]>(nameof(Node.Members));
+    public OperatorType[] Members => DataStore.Get<OperatorType[]>(nameof(Node.Members));
 
     public class Node : OpcEventNode
     {
-        public const string NodeId = $"ns=1;s={nameof(ProductionTeamChangedEventType)}";
+        public const string NodeId = $"ns=2;s={nameof(ProductionTeamChangedEventType)}";
 
         public Node(string name) : base(name) 
         {
-            Members = new(this, nameof(Members), []);
+            Members = new(this, nameof(Members))
+            {
+                Value = [],
+            };
         }
-        public Node(IOpcNode parent, string name)
-                : base(parent, name)
+        public Node(IOpcNode parent, string name) : base(parent, name)
         {
-            Members = new(this, nameof(Members), []);
+            Members = new(this, nameof(Members))
+            {
+                Value = [],
+            };
         }
 
         public OpcPropertyNode<OperatorType[]> Members { get; }

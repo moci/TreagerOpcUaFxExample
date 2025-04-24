@@ -17,11 +17,9 @@ internal static class NodeSet
   <NamespaceUris>
     <Uri>http://opcua.product.company</Uri>
   </NamespaceUris>
+
   <Aliases>
-    <Alias Alias="HasModellingRule">i=37</Alias>
-    <Alias Alias="HasTypeDefinition">i=40</Alias>
     <Alias Alias="HasSubtype">i=45</Alias>
-    <Alias Alias="HasProperty">i=46</Alias>
   </Aliases>
 
   <UAObjectType NodeId="ns=1;s=MachineStartedEventType" BrowseName="1:MachineStartedEventType">
@@ -44,6 +42,7 @@ internal static class NodeSet
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
     </References>
   </UAObjectType>
+
 </UANodeSet>
 """;
 }
