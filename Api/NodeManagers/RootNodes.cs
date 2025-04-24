@@ -22,6 +22,12 @@ public class RootNodes : OpcNodeManager
         Production = new(mProductionNode, () => SystemContext);
     }
 
+    protected override IEnumerable<OpcNodeSet> ImportNodes()
+    {
+        var xmlNodeSet = OpcNodeSet.Parse(NodeSet.Xml);
+        yield return xmlNodeSet;
+    }
+
     protected override IEnumerable<IOpcNode> CreateNodes(OpcNodeReferenceCollection references)
     {
         yield return new OpcDataTypeNode<OperatorType>();
@@ -42,31 +48,22 @@ public class RootNodes : OpcNodeManager
         yield return mProductionNode;
 
         ProductionTeamChangedEventType.Node productionTeamChanged = new(eventsNode, "ProductionTeamChanged");
-        MachineAlarmEventType.Node machineAlarm = new(eventsNode, "MachineAlarm");
-        MachineStartedEventType.Node machineStarted = new(eventsNode, "MachineStarted");
-
-        references.Add(productionTeamChanged, OpcObjectTypes.EventTypesFolder);
-        references.Add(machineAlarm, OpcObjectTypes.EventTypesFolder);
-        references.Add(machineStarted, OpcObjectTypes.EventTypesFolder);
-
         eventsNode.AddNotifier(SystemContext, productionTeamChanged);
+        
+        MachineAlarmEventType.Node machineAlarm = new(eventsNode, "MachineAlarm");
         eventsNode.AddNotifier(SystemContext, machineAlarm);
+        
+        MachineStartedEventType.Node machineStarted = new(eventsNode, "MachineStarted");
         eventsNode.AddNotifier(SystemContext, machineStarted);
 
         Production.TeamChanged += (o, e) =>
         {
-            //productionTeamChanged.EventId = Guid.NewGuid().ToByteArray();
-            productionTeamChanged.Time = DateTime.UtcNow;
-            productionTeamChanged.ReceiveTime = DateTime.UtcNow;
             productionTeamChanged.Members.Value = [.. e];
 
             productionTeamChanged.ReportEventFrom(SystemContext, eventsNode);
         };
         Machine.AlarmObserved += (o, e) =>
         {
-            //machineAlarm.EventId = Guid.NewGuid().ToByteArray();
-            machineAlarm.Time = DateTime.UtcNow;
-            machineAlarm.ReceiveTime = DateTime.UtcNow;
             machineAlarm.AlarmId.Value = e.Id;
             machineAlarm.AlarmSeverity.Value = e.Severity;
             machineAlarm.AlarmObservedAt.Value = e.ObservedAt;
@@ -75,10 +72,6 @@ public class RootNodes : OpcNodeManager
         };
         Machine.MachineStarted += (o, e) =>
         {
-            //machineStarted.EventId = Guid.NewGuid().ToByteArray();
-            machineStarted.Time = DateTime.UtcNow;
-            machineStarted.ReceiveTime = DateTime.UtcNow;
-
             machineStarted.ReportEventFrom(SystemContext, eventsNode);
         };
     }

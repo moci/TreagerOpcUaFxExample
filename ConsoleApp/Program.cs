@@ -25,8 +25,7 @@ internal class Program
 
         var filter = OpcFilter
             .Using(client)
-            .FromEvents(OpcEventTypes.Event)
-            //.FromEvents("ns=2;s=MachineAlarmEventType")
+            .FromEvents("ns=1;s=MachineStartedEventType")
             .Select();
         client.SubscribeEvent("ns=2;s=Events", filter, OnEventRecievedHandler);
 

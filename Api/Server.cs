@@ -14,6 +14,7 @@ public class Server
         mServer = new(address, mNodes)
         {
             ApplicationName = "opcua.product.company",
+            ApplicationUri = new Uri("http://opcua.product.company"),
         };
 
         Machine = new(mNodes.Machine);
