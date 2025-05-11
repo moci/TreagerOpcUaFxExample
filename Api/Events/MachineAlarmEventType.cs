@@ -2,34 +2,28 @@
 
 namespace OpcUaApi.Api.Events;
 
-[OpcEventType(Node.NodeId)]
+[OpcEventType($"ns=2;s={nameof(MachineAlarmEventType)}")]
 public class MachineAlarmEventType(IOpcReadOnlyNodeDataStore dataStore) : OpcEvent(dataStore)
 {
-    public string AlarmId => DataStore.Get<string>(nameof(Node.AlarmId));
-    public int AlarmSeverity => DataStore.Get<int>(nameof(Node.AlarmSeverity));
-    public DateTime AlarmObservedAt => DataStore.Get<DateTime>(nameof(Node.AlarmObservedAt));
+    public string AlarmId => DataStore.Get<string>($"1:{nameof(Node.AlarmId)}");
+    public int AlarmSeverity => DataStore.Get<int>($"1:{nameof(Node.AlarmSeverity)}");
+    public DateTime AlarmObservedAt => DataStore.Get<DateTime>($"1:{nameof(Node.AlarmObservedAt)}");
 
     public sealed class Node : OpcEventNode
     {
-        public const string NodeId = $"ns=2;s={nameof(MachineAlarmEventType)}";
+        public static OpcNodeId NodeId { get; set; } = OpcNodeId.Null;
 
-        public Node(string name) : base(name)
-        {
-            AlarmId = new(this, nameof(AlarmId), string.Empty);
-            AlarmSeverity = new(this, nameof(AlarmSeverity), 0);
-            AlarmObservedAt = new(this, nameof(AlarmObservedAt), DateTime.Now);
-        }
         public Node(IOpcNode parent, string name) : base(parent, name)
         {
-            AlarmId = new(this, nameof(AlarmId), string.Empty);
-            AlarmSeverity = new(this, nameof(AlarmSeverity), 0);
-            AlarmObservedAt = new(this, nameof(AlarmObservedAt), DateTime.Now);
+            AlarmId = new(this, $"1:{nameof(AlarmId)}", string.Empty);
+            AlarmSeverity = new(this, $"1:{nameof(AlarmSeverity)}", 0);
+            AlarmObservedAt = new(this, $"1:{nameof(AlarmObservedAt)}", DateTime.Now);
         }
 
         public OpcPropertyNode<string> AlarmId { get; }
         public OpcPropertyNode<int> AlarmSeverity { get; }
         public OpcPropertyNode<DateTime> AlarmObservedAt { get; }
 
-        protected override OpcNodeId DefaultTypeDefinitionId { get; } = NodeId;
+        protected override OpcNodeId DefaultTypeDefinitionId => NodeId;
     }
 }

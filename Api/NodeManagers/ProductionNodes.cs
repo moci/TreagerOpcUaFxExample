@@ -6,13 +6,10 @@ namespace OpcUaApi.Api.NodeManagers;
 
 public sealed class ProductionNodes
 {
-    private readonly Func<OpcContext> mGetContext;
     private readonly OpcDataVariableNode<OperatorType[]> mTeam;
 
-    public ProductionNodes(OpcFolderNode node, Func<OpcContext> getContext)
+    public ProductionNodes(OpcFolderNode node)
     {
-        mGetContext = getContext;
-
         mTeam = new(node, "Team")
         {
             Value = [],
@@ -26,12 +23,8 @@ public sealed class ProductionNodes
         get => mTeam.Value;
         set
         {
-            var before = Team.Count();
             mTeam.Value = [.. value];
-            mTeam.ApplyChanges(mGetContext(), true);
-
-            var after = Team.Count();
-            if (before == after) return;
+            mTeam.ApplyChanges(OpcContext.Empty, true);
 
             TeamChanged(this, mTeam.Value);
         }

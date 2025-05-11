@@ -6,16 +6,12 @@ namespace OpcUaApi.Api.NodeManagers;
 
 public sealed class MachineNodes
 {
-    private readonly Func<OpcContext> mGetContext;
-
     private readonly OpcDataVariableNode<bool> mIsRunning;
     private readonly OpcDataVariableNode<MachineIdentificationType> mIdentification;
     private readonly OpcDataVariableNode<MachineAlarmType[]> mAlarms;
 
-    public MachineNodes(OpcFolderNode node, Func<OpcContext> getContext)
+    public MachineNodes(OpcFolderNode node)
     {
-        mGetContext = getContext;
-
         mIsRunning = new(node, "IsRunning");
         mIdentification = new(node, "Identification")
         {
@@ -40,7 +36,7 @@ public sealed class MachineNodes
             if (mIsRunning.Value == value) return;
 
             mIsRunning.Value = value;
-            mIsRunning.ApplyChanges(mGetContext());
+            mIsRunning.ApplyChanges(OpcContext.Empty);
 
             if (value) MachineStarted(this, EventArgs.Empty);
         }
@@ -50,7 +46,7 @@ public sealed class MachineNodes
     public void ObserveAlarm(MachineAlarmType alarm)
     {
         mAlarms.Value = [.. Alarms.Append(alarm)];
-        mAlarms.ApplyChanges(mGetContext(), true);
+        mAlarms.ApplyChanges(OpcContext.Empty, true);
         AlarmObserved(this, alarm);
     }
     public void SetIdentification(
@@ -60,6 +56,6 @@ public sealed class MachineNodes
         string serial)
     {
         mIdentification.Value = new() { Name = name, Serial = serial };
-        mIdentification.ApplyChanges(mGetContext());
+        mIdentification.ApplyChanges(OpcContext.Empty);
     }
 }

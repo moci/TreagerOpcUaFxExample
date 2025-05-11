@@ -10,11 +10,11 @@ public class Server
 
     public Server(string address)
     {
-        mNodes = new();
+        mNodes = new("http://opcua.product.company");
         mServer = new(address, mNodes)
         {
-            ApplicationName = "opcua.product.company",
-            ApplicationUri = new Uri("http://opcua.product.company"),
+            ApplicationName = mNodes.DefaultNamespace.Value,
+            ApplicationUri = new Uri(mNodes.DefaultNamespace.Value),
         };
 
         Machine = new(mNodes.Machine);

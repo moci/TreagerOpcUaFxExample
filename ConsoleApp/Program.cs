@@ -132,9 +132,9 @@ internal class Program
         Console.WriteLine($"\tEvent source name: {e.Event.SourceName}");
         Console.WriteLine($"\tEvent source node id: {e.Event.SourceNodeId}");
 
-        if (e.Event is MachineAlarmEventType alarmEvent) Console.WriteLine("\tMachine alarm event received");
-        else if (e.Event is MachineStartedEventType) Console.WriteLine("\tMachine started event received");
-        else if (e.Event is ProductionTeamChangedEventType) Console.WriteLine("\tProduction team changed event received");
-        else Console.WriteLine("\tUnexpected event received");
+        if (e.Event is MachineAlarmEventType alarmEvent) Console.WriteLine("\t\tMachine alarm event received");
+        else if (e.Event is MachineStartedEventType) Console.WriteLine("\t\tMachine started event received");
+        else if (e.Event is ProductionTeamChangedEventType) Console.WriteLine("\t\tProduction team changed event received");
+        else Console.WriteLine("\t\tUnexpected event received");
     }
 }

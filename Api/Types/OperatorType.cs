@@ -6,6 +6,6 @@ namespace OpcUaApi.Api.Types;
 [OpcDataTypeEncoding($"ns=2;s={nameof(OperatorType)}.Binary", Type = OpcEncodingType.Binary)]
 public sealed class OperatorType
 {
-    public string Id { get; set; } = string.Empty;
-    public double Cost { get; set; } = 0;
+    public required string Id { get; init; }
+    public required double Cost { get; init; }
 }

@@ -2,16 +2,15 @@
 
 namespace OpcUaApi.Api.Events;
 
-[OpcEventType(Node.NodeId)]
+[OpcEventType($"ns=2;s={nameof(MachineStartedEventType)}")]
 public sealed class MachineStartedEventType(IOpcReadOnlyNodeDataStore dataStore) : OpcEvent(dataStore)
 {
     public sealed class Node : OpcEventNode
     {
-        public const string NodeId = $"ns=2;s={nameof(MachineStartedEventType)}";
+        public static OpcNodeId NodeId { get; set; } = OpcNodeId.Null;
 
-        public Node(string name) : base(name) { }
         public Node(IOpcNode parent, string name) : base(parent, name) { }
 
-        protected override OpcNodeId DefaultTypeDefinitionId { get; } = NodeId;
+        protected override OpcNodeId DefaultTypeDefinitionId => NodeId;
     }
 }

@@ -6,7 +6,7 @@ namespace OpcUaApi.Api.Types;
 [OpcDataTypeEncoding($"ns=2;s={nameof(MachineAlarmType)}.Binary", Type = OpcEncodingType.Binary)]
 public sealed class MachineAlarmType
 {
-    public string Id { get; init; } = string.Empty;
-    public int Severity { get; init; } = 0;
-    public DateTime ObservedAt { get; init; } = DateTime.UtcNow;
+    public required string Id { get; init; }
+    public required int Severity { get; init; }
+    public required DateTime ObservedAt { get; init; }
 }
